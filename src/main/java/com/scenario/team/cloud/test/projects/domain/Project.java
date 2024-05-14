@@ -1,4 +1,4 @@
-package com.scenario.team.cloud.test.projects;
+package com.scenario.team.cloud.test.projects.domain;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;

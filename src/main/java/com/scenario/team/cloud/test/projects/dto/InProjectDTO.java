@@ -1,4 +1,4 @@
-package com.scenario.team.cloud.test.projects;
+package com.scenario.team.cloud.test.projects.dto;
 
 import jakarta.annotation.Nullable;
 

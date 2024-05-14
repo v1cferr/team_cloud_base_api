@@ -1,5 +1,7 @@
 package com.scenario.team.cloud.test.projects;
 
+import com.scenario.team.cloud.test.projects.domain.Project;
+import com.scenario.team.cloud.test.projects.exceptions.ProjectNotFoundException;
 import jakarta.annotation.Nonnull;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,16 @@ public class ProjectService {
 
     public void insertProject(@Nonnull Project project) {
         this.repository.save(project);
+    }
+
+    public void updateProject(int id, @Nonnull Project project) {
+        var currentProject = this.repository.findById(id).orElseThrow(ProjectNotFoundException::new);
+        currentProject.setName(project.getName());
+        this.repository.save(currentProject);
+    }
+
+    public void deleteProject(int id) {
+        this.repository.deleteById(id);
     }
 
     @Nonnull
