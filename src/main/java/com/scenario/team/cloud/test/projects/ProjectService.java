@@ -33,6 +33,10 @@ public class ProjectService {
 
     @Nonnull
     public List<Project> listAllProjects() {
-        return this.repository.findAll();
+        return this.repository.findAll().stream().sorted((p1, p2) -> {
+            var id1 = p1.getId();
+            var id2 = p2.getId();
+            return (id1 != null ? id1 : 0) - (id2 != null ? id2 : 0);
+        }).toList();
     }
 }
