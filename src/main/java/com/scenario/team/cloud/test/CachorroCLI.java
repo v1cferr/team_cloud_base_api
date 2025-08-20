@@ -1,3 +1,17 @@
+// 1. Para compilar:
+// javac Cachorro.java CachorroCLI.java
+//
+// 2. Para rodar:
+// java com.scenario.team.cloud.test.CachorroCLI
+//
+// Observações importantes:
+// 1. Execute os comandos dentro da pasta onde estão os arquivos .java (src/main/java/com/scenario/team/cloud/test).
+// 2. Se aparecer erro "Could not find or load main class", verifique se está no diretório correto e se o comando java inclui o pacote completo.
+// 3. Se der erro de classe não encontrada, certifique-se de que ambos os arquivos foram compilados.
+// 4. Se usar IDE, pode rodar direto pelo botão de execução.
+// 5. Se mudar o nome do pacote ou mover o arquivo, ajuste o comando java conforme o novo caminho do pacote.
+// 6. Para limpar arquivos .class antigos, use: rm *.class
+// 7. Se usar Windows, os comandos são os mesmos, mas use \ ao invés de / nos caminhos.
 package com.scenario.team.cloud.test;
 
 import java.util.Scanner;
