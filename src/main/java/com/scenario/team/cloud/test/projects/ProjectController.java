@@ -39,4 +39,13 @@ public class ProjectController {
         return this.projectService.listAllProjects().stream().map(project -> new OutProjectDTO(project.getId(), project.getName())).toList();
     }
 
+    @GetMapping("/{id}")
+    public OutProjectDTO getProject(@PathVariable("id") int id) {
+        return this.projectService.listAllProjects().stream()
+                .filter(project -> project.getId() == id)
+                .map(project -> new OutProjectDTO(project.getId(), project.getName()))
+                .findFirst()
+                .orElse(null);
+    }
+
 }
