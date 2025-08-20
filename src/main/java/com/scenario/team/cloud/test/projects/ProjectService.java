@@ -5,7 +5,9 @@ import com.scenario.team.cloud.test.projects.exceptions.BadRequestException;
 import com.scenario.team.cloud.test.projects.domain.Project;
 import com.scenario.team.cloud.test.projects.exceptions.ProjectNotFoundException;
 import jakarta.annotation.Nonnull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +16,12 @@ public class ProjectService {
 
     @Nonnull
     private final ProjectRepository repository;
+    
+    @Autowired
+    private RoomService roomService;
+    
+    @Autowired  
+    private LampService lampService;
 
     public ProjectService(@Nonnull ProjectRepository repository) {
         this.repository = repository;
@@ -38,8 +46,24 @@ public class ProjectService {
         this.repository.save(currentProject);
     }
 
+    @Transactional
     public void deleteProject(int id) {
-        this.repository.deleteById(id);
+        // Verificar se o projeto existe
+        var project = this.repository.findById(id).orElseThrow(() -> 
+            new ProjectNotFoundException("Projeto com ID " + id + " não encontrado"));
+        
+        try {
+            // Deletar lâmpadas primeiro (por causa das foreign keys)
+            this.repository.deleteLampsByProjectId(id);
+            
+            // Deletar rooms em seguida
+            this.repository.deleteRoomsByProjectId(id);
+            
+            // Finalmente deletar o projeto
+            this.repository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar projeto: " + e.getMessage(), e);
+        }
     }
 
     @Nonnull

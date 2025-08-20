@@ -72,4 +72,38 @@ public class DebugController {
         }
         return result;
     }
+    
+    @GetMapping("/clear-all-data")
+    public Map<String, String> clearAllData() {
+        Map<String, String> result = new HashMap<>();
+        try {
+            // Usar SQL nativo para limpar tudo
+            javax.sql.DataSource dataSource = this.dataSource;
+            try (java.sql.Connection conn = dataSource.getConnection();
+                 java.sql.Statement stmt = conn.createStatement()) {
+                
+                // Deletar dados em ordem (respeitando foreign keys)
+                stmt.executeUpdate("DELETE FROM lamp");
+                stmt.executeUpdate("DELETE FROM light"); 
+                stmt.executeUpdate("DELETE FROM room");
+                stmt.executeUpdate("DELETE FROM environment");
+                stmt.executeUpdate("DELETE FROM project");
+                
+                // Reset sequences
+                stmt.executeUpdate("ALTER SEQUENCE project_id_sequence RESTART WITH 1");
+                stmt.executeUpdate("ALTER SEQUENCE room_id_sequence RESTART WITH 1");  
+                stmt.executeUpdate("ALTER SEQUENCE lamp_id_sequence RESTART WITH 1");
+            }
+            
+            result.put("status", "✅ Todos os dados foram limpos com sucesso!");
+            result.put("projects_remaining", String.valueOf(projectService.listAllProjects().size()));
+            result.put("rooms_remaining", String.valueOf(roomService.getAllRooms().size()));
+            result.put("lamps_remaining", String.valueOf(lampService.getAllLamps().size()));
+            
+        } catch (Exception e) {
+            result.put("status", "❌ Erro ao limpar dados: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
