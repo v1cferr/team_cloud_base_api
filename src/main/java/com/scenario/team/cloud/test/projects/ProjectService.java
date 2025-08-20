@@ -1,5 +1,7 @@
 package com.scenario.team.cloud.test.projects;
 
+import com.scenario.team.cloud.test.projects.exceptions.BadRequestException;
+
 import com.scenario.team.cloud.test.projects.domain.Project;
 import com.scenario.team.cloud.test.projects.exceptions.ProjectNotFoundException;
 import jakarta.annotation.Nonnull;
@@ -20,9 +22,8 @@ public class ProjectService {
     public void insertProject(@Nonnull Project project) {
         // Validação do projeto antes de inserir
         if (project.getName() == null || project.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do projeto inválido");
+            throw new BadRequestException("Nome do projeto não pode ser vazio.");
         }
-
         this.repository.save(project);
     }
 
@@ -32,9 +33,8 @@ public class ProjectService {
 
         // Antes de salvar, preciso validar se o novo nome é valido
         if (currentProject.getName() == null || currentProject.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome do projeto inválido");
+            throw new BadRequestException("Nome do projeto não pode ser vazio.");
         }
-
         this.repository.save(currentProject);
     }
 
