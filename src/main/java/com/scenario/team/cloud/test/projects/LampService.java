@@ -76,7 +76,28 @@ public class LampService {
         lamp.setName(inLampDTO.getName());
 
         Lamp savedLamp = lampRepository.save(lamp);
-        return convertToOutDTO(savedLamp);
+        OutLampDTO result = convertToOutDTO(savedLamp);
+        
+        // Send WebSocket update
+        lampStatusService.sendLampUpdate(result);
+        
+        return result;
+    }
+
+    @Transactional
+    public OutLampDTO updateLampName(Integer id, String name) {
+        Lamp lamp = lampRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Lamp not found with id: " + id));
+
+        lamp.setName(name);
+
+        Lamp savedLamp = lampRepository.save(lamp);
+        OutLampDTO result = convertToOutDTO(savedLamp);
+        
+        // Send WebSocket update
+        lampStatusService.sendLampUpdate(result);
+        
+        return result;
     }
 
     @Transactional

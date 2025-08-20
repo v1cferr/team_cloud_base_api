@@ -70,6 +70,19 @@ public class LampController {
         return ResponseEntity.ok(updatedLamp);
     }
 
+    @PutMapping("/{id}/name")
+    @Operation(summary = "Update lamp name", description = "Update only the name of an existing lamp")
+    public ResponseEntity<OutLampDTO> updateLampName(
+            @Parameter(description = "Lamp ID") @PathVariable Integer id,
+            @RequestBody Map<String, String> nameRequest) {
+        String name = nameRequest.get("name");
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        OutLampDTO updatedLamp = lampService.updateLampName(id, name.trim());
+        return ResponseEntity.ok(updatedLamp);
+    }
+
     @PutMapping("/{id}/toggle")
     @Operation(summary = "Toggle lamp status", description = "Toggle lamp on/off status")
     public ResponseEntity<OutLampDTO> toggleLampStatus(
