@@ -1,10 +1,10 @@
 # Multi-stage build para reduzir o tamanho da imagem final
 
 # Estágio 1: Build
-FROM openjdk:17-jdk-slim AS builder
+FROM eclipse-temurin:17-jdk-alpine AS builder
 
 # Instalar Maven
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache maven
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -25,10 +25,13 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests -B
 
 # Estágio 2: Runtime
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre-alpine
+
+# Instalar curl para healthcheck
+RUN apk add --no-cache curl
 
 # Criar usuário não-root para segurança
-RUN addgroup --system spring && adduser --system spring --ingroup spring
+RUN addgroup -g 1001 -S spring && adduser -u 1001 -S spring -G spring
 
 # Definir diretório de trabalho
 WORKDIR /app
