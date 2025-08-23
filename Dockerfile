@@ -47,15 +47,15 @@ USER spring
 
 # Variáveis de ambiente para produção - OTIMIZADO PARA HOBBY PLAN
 ENV JAVA_OPTS="-Xmx256m -Xms128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -Djava.awt.headless=true"
-ENV SERVER_PORT=8080
+ENV SERVER_PORT=10000
 ENV SPRING_PROFILES_ACTIVE=hobby
 
-# Expor a porta
-EXPOSE 8080
+# Expor a porta que o Render.com espera
+EXPOSE 10000
 
-# Healthcheck mais robusto para o Render.com
+# Healthcheck para a porta correta do Render.com
 HEALTHCHECK --interval=20s --timeout=10s --start-period=120s --retries=5 \
-    CMD curl -f http://localhost:8080/actuator/health || curl -f http://0.0.0.0:8080/actuator/health || exit 1
+    CMD curl -f http://localhost:10000/actuator/health || curl -f http://0.0.0.0:10000/actuator/health || exit 1
 
 # Comando para executar a aplicação com configurações otimizadas para Render.com
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.address=0.0.0.0 -Dserver.port=8080 -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.address=0.0.0.0 -Dserver.port=10000 -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
