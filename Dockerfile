@@ -27,9 +27,6 @@ RUN ./mvnw clean package -DskipTests -B
 # Estágio 2: Runtime
 FROM eclipse-temurin:17-jre-alpine
 
-# Instalar curl para healthcheck
-RUN apk add --no-cache curl
-
 # Criar usuário não-root para segurança
 RUN addgroup -g 1001 -S spring && adduser -u 1001 -S spring -G spring
 
@@ -52,10 +49,6 @@ ENV SPRING_PROFILES_ACTIVE=hobby
 
 # Expor a porta que o Render.com espera
 EXPOSE 10000
-
-# Healthcheck para a porta correta do Render.com
-HEALTHCHECK --interval=20s --timeout=10s --start-period=120s --retries=5 \
-    CMD curl -f http://localhost:10000/actuator/health || curl -f http://0.0.0.0:10000/actuator/health || exit 1
 
 # Comando para executar a aplicação com configurações otimizadas para Render.com
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.address=0.0.0.0 -Dserver.port=10000 -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
