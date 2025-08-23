@@ -53,9 +53,9 @@ ENV SPRING_PROFILES_ACTIVE=hobby
 # Expor a porta
 EXPOSE 8080
 
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
+# Healthcheck mais robusto para o Render.com
+HEALTHCHECK --interval=20s --timeout=10s --start-period=120s --retries=5 \
+    CMD curl -f http://localhost:8080/actuator/health || curl -f http://0.0.0.0:8080/actuator/health || exit 1
 
-# Comando para executar a aplicação
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
+# Comando para executar a aplicação com configurações otimizadas para Render.com
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.address=0.0.0.0 -Dserver.port=8080 -Djava.security.egd=file:/dev/./urandom -jar app.jar"]
