@@ -35,18 +35,27 @@ public class RenderDatabaseConfig {
                         .build();
             }
 
-            // Converter postgres:// para jdbc:postgresql://
-            if (databaseUrl.startsWith("postgres://")) {
+            // Converter postgres:// ou postgresql:// para jdbc:postgresql://
+            if (databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://")) {
                 URI uri = new URI(databaseUrl);
+                
+                // Usar porta padrão 5432 se não especificada
+                int port = uri.getPort() == -1 ? 5432 : uri.getPort();
                 
                 String jdbcUrl = String.format("jdbc:postgresql://%s:%d%s",
                         uri.getHost(),
-                        uri.getPort() == -1 ? 5432 : uri.getPort(),
+                        port,
                         uri.getPath());
 
-                String[] userInfo = uri.getUserInfo().split(":");
-                String username = userInfo[0];
-                String password = userInfo.length > 1 ? userInfo[1] : "";
+                // Extrair username e password se disponíveis
+                String username = "";
+                String password = "";
+                
+                if (uri.getUserInfo() != null) {
+                    String[] userInfo = uri.getUserInfo().split(":");
+                    username = userInfo[0];
+                    password = userInfo.length > 1 ? userInfo[1] : "";
+                }
 
                 return DataSourceBuilder.create()
                         .url(jdbcUrl)
