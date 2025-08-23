@@ -2,6 +2,17 @@
 
 Software back-end desenvolvido em Java + Spring Boot para simples gerenciamento de projetos de automação residencial.
 
+## 🌐 Deploy em Produção
+
+**API Online**: <https://team-cloud-base-api.onrender.com>
+
+**Swagger UI**: <https://team-cloud-base-api.onrender.com/swagger-ui/index.html>
+
+**Credenciais de acesso:**
+
+- **Admin**: `admin` / `admin123`
+- **User**: `user` / `user123`
+
 ## 📋 Pré-requisitos
 
 - **Java 17** ou superior
@@ -148,13 +159,22 @@ docker exec -it postgres-scenario psql -U scenario -d local
 
 Acesse a documentação interativa da API:
 
-```markdown
+**Produção (Render.com):**
+
+```url
+https://team-cloud-base-api.onrender.com/swagger-ui/index.html
+```
+
+**Local (desenvolvimento):**
+
+```url
 http://localhost:8080/swagger-ui/index.html
 ```
 
 ### Endpoints disponíveis
 
-**Base URL**: `http://localhost:8080`
+**Base URL Produção**: `https://team-cloud-base-api.onrender.com`
+**Base URL Local**: `http://localhost:8080`
 
 - `GET /projects` - Listar todos os projetos
 - `POST /projects` - Criar novo projeto
@@ -162,6 +182,31 @@ http://localhost:8080/swagger-ui/index.html
 - `DELETE /projects/{id}` - Deletar projeto
 
 ### Exemplos com cURL
+
+**Produção (Render.com):**
+
+```bash
+# Listar projetos
+curl -X GET https://team-cloud-base-api.onrender.com/api/projects
+
+# Criar projeto (necessita autenticação)
+curl -X POST https://team-cloud-base-api.onrender.com/api/projects \
+  -u admin:admin123 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Projeto Teste"}'
+
+# Atualizar projeto (substitua {id} pelo ID real)
+curl -X PUT https://team-cloud-base-api.onrender.com/api/projects/1 \
+  -u admin:admin123 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Projeto Atualizado"}'
+
+# Deletar projeto
+curl -X DELETE https://team-cloud-base-api.onrender.com/api/projects/1 \
+  -u admin:admin123
+```
+
+**Local (desenvolvimento):**
 
 ```bash
 # Listar projetos
@@ -180,6 +225,11 @@ curl -X PUT http://localhost:8080/projects/1 \
 # Deletar projeto
 curl -X DELETE http://localhost:8080/projects/1
 ```
+
+### 🔑 Credenciais de Acesso (Produção)
+
+- **Admin**: `admin` / `admin123`
+- **User**: `user` / `user123`
 
 ## 📦 Estrutura do Projeto
 
